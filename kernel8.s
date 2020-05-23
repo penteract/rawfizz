@@ -89,7 +89,8 @@ Loop:
   // Draw Characters
   mov w1,256 + (SCREEN_X * 32)
   mov w18,SCREEN_X * 8
-  mul w18,w18,w3
+  and x19,x3,0x1F
+  mul w18,w18,w19
   add w1,w1,w18
   add w0,w17,w1 // Place Text At XY Position 256,32
 
@@ -113,11 +114,8 @@ Loop:
     b DrawChars
   EndChars:
 
-  cmp x3,10
-  beq CoreLoop
-
   mov x15,0
-  movk x15,0x0100,LSL 16
+  movk x15,0x0020,LSL 16
   Delay:
     subs x15,x15,1
     bne Delay

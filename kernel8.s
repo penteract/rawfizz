@@ -111,7 +111,9 @@ Loop:
   movk x15,0x0001,LSL 32
   Delay:
     subs x15,x15,1
-    beq Loop
+    bne Delay
+  
+  b Loop
 
 CoreLoop: // Infinite Loop For Core 1..3
   b CoreLoop

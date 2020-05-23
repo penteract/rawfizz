@@ -57,6 +57,8 @@ orr x8,x8,x8,LSL 32
 and x7,x8,x8,LSR 1
 orr x7,x7,x7,LSL 2 // Save an instruction by constructing 0x7777 from 0x3333
 
+mov w17,w0
+
 Loop:
   add x3,x3,1
 
@@ -86,7 +88,10 @@ Loop:
 
   // Draw Characters
   mov w1,256 + (SCREEN_X * 32)
-  add w0,w0,w1 // Place Text At XY Position 256,32
+  mov w18,SCREEN_X * 8
+  mul w18,w18,w3
+  add w1,w1,w18
+  add w0,w17,w1 // Place Text At XY Position 256,32
 
   adr x1,Font // X1 = Characters
 
@@ -108,11 +113,15 @@ Loop:
     b DrawChars
   EndChars:
 
-  movk x15,0x0001,LSL 32
+  cmp x3,10
+  beq CoreLoop
+  b Loop
+
+  movk x15,0x0010,LSL 16
   Delay:
     subs x15,x15,1
     bne Delay
-  
+
   b Loop
 
 CoreLoop: // Infinite Loop For Core 1..3

@@ -76,15 +76,22 @@ Loop:
   
   cmp x3,x9
   beq Mod3
+  adr x2,NumberBuffer // X2 = Text Offset
+  add x2,x2, 16 //number of digits
+  mov x11,x3
   PRNUM:
-    adr x2,NumberBuffer // X2 = Text Offset
-    add x9, x3, 1
+    sub x2,x2,1
+    add x9, x11, 1
     umulh x9, x9, x8 // /5
     and x9,x9,-2 // /2 * 2
     add x10, x9, x9,LSL 2 // *5
     sub x10, x3, x10
     add w10,w10, 0x30
     strb w10,[x2]
+    adr x2,NumberBuffer // X2 = Text Offset
+    
+    bne PRNUM
+
   b EndMod
 
   Mod3:

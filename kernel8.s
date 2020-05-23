@@ -50,17 +50,38 @@ FB_Init:
   adr x1,FB_POINTER
   str w0,[x1] // Store Frame Buffer Pointer Physical Address
 
-mov w3,0 // Counter
+mov x3,0 // Counter
+mov x8,0x3333
+orr x8,x8,x8,LSL 16
+orr x8,x8,x8,LSL 32
+and x7,x8,x8,LSR 1
+orr x7,x7,x7,LSL 2 // Save an instruction by constructing 0x7777 from 0x3333
 
 Loop:
-  add w3,w3,1
+  add x3,x3,1
+
+  // Calculate div faster using multiplication
+
+  // MOD 3
+  umulh x9,x3,x7
+  add x9,x9,1
+  add x9,x9,x9,LSL 1
+  cmp x9,x3
+  beq Mod3
+
+  adr x2,NumberBuffer
+  b EndMod
+
+  Mod3:
+    adr x2,Fizz
+
+  EndMod:
 
   // Draw Characters
   mov w1,256 + (SCREEN_X * 32)
   add w0,w0,w1 // Place Text At XY Position 256,32
 
   adr x1,Font // X1 = Characters
-  adr x2,NumberBuffer // X2 = Text Offset
 
   DrawChars:
     mov w4,CHAR_Y // W4 = Character Row Counter
@@ -132,16 +153,16 @@ FB_POINTER:
 FB_STRUCT_END:
 
 NumberBuffer:
-  .ascii "TODO: Do number\0"
+  .ascii "TODO: Do number         \0"
 
 Fizz:
-  .ascii "Fizz\0"
+  .ascii "Fizz                    \0"
 
 Buzz:
-  .ascii "Buzz\0"
+  .ascii "Buzz                    \0"
 
 Fizzbuzz:
-  .ascii "Fizzbuzz\0"
+  .ascii "Fizzbuzz                \0"
 
 .align 3
 Font:

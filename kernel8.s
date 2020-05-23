@@ -68,8 +68,18 @@ Loop:
   umulh x9,x3,x7
   add x9,x9,1
   add x9,x9,x9,LSL 1
+
+  // MOD 5
+  umulh x20,x3,x8
+  add x20,x20,1
+  add x20,x20,x20,LSL 2
+
   cmp x9,x3
   beq Mod3
+
+  cmp x20,x3
+  beq Mod5
+
   adr x2,NumberBuffer // X2 = Text Offset
   add x2,x2, 16 //number of digits
   mov x11,x3
@@ -91,7 +101,18 @@ Loop:
   b EndMod
 
   Mod3:
+    cmp x20,x3
+    beq Mod15
+
     adr x2,Fizz
+    b EndMod
+
+  Mod5:
+    adr x2,Buzz
+    b EndMod
+
+  Mod15:
+    adr x2,Fizzbuzz
 
   EndMod:
 
@@ -184,16 +205,16 @@ FB_POINTER:
 FB_STRUCT_END:
 
 NumberBuffer:
-  .ascii "TODO: Do number         \0"
+  .ascii "                        \0"
 
 Fizz:
-  .ascii "Fizz                    \0"
+  .ascii "            Fizz        \0"
 
 Buzz:
-  .ascii "Buzz                    \0"
+  .ascii "            Buzz        \0"
 
 Fizzbuzz:
-  .ascii "Fizzbuzz                \0"
+  .ascii "        Fizzbuzz        \0"
 
 .align 3
 Font:

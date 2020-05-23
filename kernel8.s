@@ -51,16 +51,16 @@ FB_Init:
   str w0,[x1] // Store Frame Buffer Pointer Physical Address
 
 mov w3,0 // Counter
-adr x1,Font // X1 = Characters
 
 Loop:
   add w3,w3,1
 
-  adr x2,NumberBuffer // X2 = Text Offset
-
   // Draw Characters
   mov w1,256 + (SCREEN_X * 32)
   add w0,w0,w1 // Place Text At XY Position 256,32
+
+  adr x1,Font // X1 = Characters
+  adr x2,NumberBuffer // X2 = Text Offset
 
   DrawChars:
     mov w4,CHAR_Y // W4 = Character Row Counter

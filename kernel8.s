@@ -68,13 +68,7 @@ Loop:
   umulh x9,x3,x7
   add x9,x9,1
   add x9,x9,x9,LSL 1
-
-  // MOD 3
-  umulh x20,x3,x8
-  add x20,x20,1
-  add x20,x20,x20,LSL 2
-  
-  cmp x3,x9
+  cmp x9,x3
   beq Mod3
   adr x2,NumberBuffer // X2 = Text Offset
   add x2,x2, 16 //number of digits
@@ -96,24 +90,17 @@ Loop:
   b EndMod
 
   Mod3:
-    cmp x3,x20
-    beq Mod15
-    
     adr x2,Fizz
-    b EndMod
-  
-  Mod15:
-    adr x2,Fizzbuzz
 
   EndMod:
 
   // Draw Characters
-  mov w1,196 + (SCREEN_X * 32)
+  mov w1,256 + (SCREEN_X * 32)
   mov w18,SCREEN_X * 8
   and x19,x3,0x1F
   mul w18,w18,w19
   add w1,w1,w18
-  add w0,w17,w1
+  add w0,w17,w1 // Place Text At XY Position 256,32
 
   adr x1,Font // X1 = Characters
 
@@ -196,16 +183,16 @@ FB_POINTER:
 FB_STRUCT_END:
 
 NumberBuffer:
-  .ascii "                        \0"
+  .ascii "TODO: Do number         \0"
 
 Fizz:
-  .ascii "                    Fizz\0"
+  .ascii "Fizz                    \0"
 
 Buzz:
-  .ascii "                    Buzz\0"
+  .ascii "Buzz                    \0"
 
 Fizzbuzz:
-  .ascii "                Fizzbuzz\0"
+  .ascii "Fizzbuzz                \0"
 
 .align 3
 Font:

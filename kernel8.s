@@ -82,10 +82,11 @@ Loop:
     sub x10, x11, x10
     add w10,w10, 0x30
     strb w10,[x2]
-    adr x2,NumberBuffer // X2 = Text Offset
     mov x11, x9,lsr 1
     cmp x11,0
     bne PRNUM
+  
+  adr x2,NumberBuffer // X2 = Text Offset
 
   b EndMod
 

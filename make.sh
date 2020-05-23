@@ -1,2 +1,2 @@
-aarch64-elf-as kernel8.s
-aarch64-elf-objcopy -O binary a.out k8.img
+aarch64-linux-gnu-as kernel8.s
+aarch64-linux-gnu-objcopy -O binary a.out kernel8.img

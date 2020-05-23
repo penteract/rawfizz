@@ -56,10 +56,11 @@ add w0,w0,w1 // Place Text At XY Position 256,32
 
 adr x1,Font // X1 = Characters
 adr x2,Text // X2 = Text Offset
-mov w3,12 // W3 = Number Of Text Characters To Print
 DrawChars:
   mov w4,CHAR_Y // W4 = Character Row Counter
   ldrb w5,[x2],#1 // X5 = Next Text Character, Advance text pointer
+  cmp w5,#0
+  beq EndChars
   add x5,x1,x5,lsl 6 // Add Shift To Correct Position In Font (* 64)
 
   DrawChar:
@@ -68,14 +69,10 @@ DrawChars:
     add x0,x0,SCREEN_X - CHAR_X // Jump Down 1 Scanline, Jump Back 1 Char
     subs w4,w4,1 // Decrement Character Row Counter
     b.ne DrawChar // IF (Character Row Counter != 0) DrawChar
-  Delay:
-    mov x9, 1000000000
-    subs x9, x9, 1
-    b.ne Delay
-  subs w3,w3,1 // Subtract Number Of Text Characters To Print
   mov x4,(SCREEN_X * CHAR_Y) - CHAR_X
   sub x0,x0,x4 // Jump To Top Of Char, Jump Forward 1 Char
-  b.ne DrawChars // IF (Number Of Text Characters != 0) Continue To Print Characters
+  b DrawChars
+EndChars:
 
 Loop:
   b Loop
@@ -133,7 +130,7 @@ FB_POINTER:
 FB_STRUCT_END:
 
 Text:
-  .ascii "Hello World!"
+  .ascii "Greetings, World!\0"
 
 .align 3
 Font:

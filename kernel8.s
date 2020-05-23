@@ -115,9 +115,9 @@ Loop:
 
   cmp x3,10
   beq CoreLoop
-  b Loop
 
-  movk x15,0x0010,LSL 16
+  mov x15,0
+  movk x15,0x0100,LSL 16
   Delay:
     subs x15,x15,1
     bne Delay

@@ -50,31 +50,34 @@ FB_Init:
   adr x1,FB_POINTER
   str w0,[x1] // Store Frame Buffer Pointer Physical Address
 
-// Draw Characters
-mov w1,256 + (SCREEN_X * 32)
-add w0,w0,w1 // Place Text At XY Position 256,32
-
+mov w3,0 // Counter
 adr x1,Font // X1 = Characters
-adr x2,Text // X2 = Text Offset
-DrawChars:
-  mov w4,CHAR_Y // W4 = Character Row Counter
-  ldrb w5,[x2],#1 // X5 = Next Text Character, Advance text pointer
-  cmp w5,#0
-  beq EndChars
-  add x5,x1,x5,lsl 6 // Add Shift To Correct Position In Font (* 64)
-
-  DrawChar:
-    ldr x6,[x5],8 // Load Font Text Character Row
-    str x6,[x0],8 // Store Font Text Character Row To Frame Buffer
-    add x0,x0,SCREEN_X - CHAR_X // Jump Down 1 Scanline, Jump Back 1 Char
-    subs w4,w4,1 // Decrement Character Row Counter
-    b.ne DrawChar // IF (Character Row Counter != 0) DrawChar
-  mov x4,(SCREEN_X * CHAR_Y) - CHAR_X
-  sub x0,x0,x4 // Jump To Top Of Char, Jump Forward 1 Char
-  b DrawChars
-EndChars:
 
 Loop:
+  add w3,w3,1
+
+  adr x2,NumberBuffer // X2 = Text Offset
+
+  // Draw Characters
+  mov w1,256 + (SCREEN_X * 32)
+  add w0,w0,w1 // Place Text At XY Position 256,32
+
+  DrawChars:
+    mov w4,CHAR_Y // W4 = Character Row Counter
+    ldrb w5,[x2],#1 // X5 = Next Text Character, Advance text pointer
+    cmp w5,#0
+    beq Loop
+    add x5,x1,x5,lsl 6 // Add Shift To Correct Position In Font (* 64)
+
+    DrawChar:
+      ldr x6,[x5],8 // Load Font Text Character Row
+      str x6,[x0],8 // Store Font Text Character Row To Frame Buffer
+      add x0,x0,SCREEN_X - CHAR_X // Jump Down 1 Scanline, Jump Back 1 Char
+      subs w4,w4,1 // Decrement Character Row Counter
+      b.ne DrawChar // IF (Character Row Counter != 0) DrawChar
+    mov x4,(SCREEN_X * CHAR_Y) - CHAR_X
+    sub x0,x0,x4 // Jump To Top Of Char, Jump Forward 1 Char
+    b DrawChars
   b Loop
 
 CoreLoop: // Infinite Loop For Core 1..3
@@ -129,8 +132,17 @@ FB_POINTER:
 .word 0x00000000 // $0 (End Tag)
 FB_STRUCT_END:
 
-Text:
-  .ascii "Greetings, World!\0"
+NumberBuffer:
+  .ascii "TODO: Do number\0"
+
+Fizz:
+  .ascii "Fizz\0"
+
+Buzz:
+  .ascii "Buzz\0"
+
+Fizzbuzz:
+  .ascii "Fizzbuzz\0"
 
 .align 3
 Font:

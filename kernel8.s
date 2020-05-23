@@ -87,7 +87,7 @@ Loop:
     mov w4,CHAR_Y // W4 = Character Row Counter
     ldrb w5,[x2],#1 // X5 = Next Text Character, Advance text pointer
     cmp w5,#0
-    beq CoreLoop
+    beq EndChars
     add x5,x1,x5,lsl 6 // Add Shift To Correct Position In Font (* 64)
 
     DrawChar:
@@ -99,6 +99,12 @@ Loop:
     mov x4,(SCREEN_X * CHAR_Y) - CHAR_X
     sub x0,x0,x4 // Jump To Top Of Char, Jump Forward 1 Char
     b DrawChars
+  EndChars:
+
+  movk x15,0x0001,LSL 32
+  Delay:
+    subs x15,x15,1
+    beq Loop
 
 CoreLoop: // Infinite Loop For Core 1..3
   b CoreLoop
